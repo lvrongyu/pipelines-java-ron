@@ -7,14 +7,24 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: ${imageName}
+
+strategy:
+  matrix:
+    jdk10_linux:
+      imageName: "ubuntu-latest"
+      jdkVersion: "1.10"
+    jdk11_windows:
+      imageName: "windows-latest"
+      jdkVersion: "1.11"
+  maxParallel: 2  
 
 steps:
-- task: Maven@3
+- task: Maven@4
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx1024m'
-    javaHomeOption: 'JDKVersion'
+    javaHomeOption: ${jdkVersion}
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
